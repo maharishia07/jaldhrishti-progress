@@ -1,0 +1,4 @@
+{
+  "micro_finance": {"max_project_cost": 140000, "interest_rate_pa": 0.065, "tenure_years": 3, "moratorium_months": 3},
+  "term_loan": {"max_project_cost": 5000000, "interest_rate_pa": 0.08, "tenure_years": 7, "moratorium_months": 6}
+}
