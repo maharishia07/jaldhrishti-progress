@@ -27,11 +27,11 @@ from telegram.ext import (
     ContextTypes,
 )
 
-from datalayer.location_resolver import resolve_location
-from datalayer.osm_client import get_business_density
-from engine.financial_engine import calculate_financial_plan
-from advisory.feasibility_engine import generate_feasibility_report
-from scheduler.storage import save_user_loan
+from src.services.datalayer.location_resolver import resolve_location
+from src.services.datalayer.osm_client import get_business_density
+from src.services.engine.financial_engine import calculate_financial_plan
+from src.services.advisory.feasibility_engine import generate_feasibility_report
+from src.services.scheduler.storage import save_user_loan
 
 # ---------------------------------------------------------------------------
 # Logging
@@ -310,7 +310,7 @@ async def received_document(update: Update, context: ContextTypes.DEFAULT_TYPE) 
     logger.info("Document received - file_id: %s", doc.file_id)
 
     try:
-        from scheduler.storage import save_uploaded_document
+        from src.services.scheduler.storage import save_uploaded_document
         save_uploaded_document(update.effective_chat.id, doc.file_id)
     except Exception as exc:
         logger.error("save_uploaded_document failed: %s", exc)

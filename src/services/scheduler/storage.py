@@ -9,12 +9,12 @@ loan_schedules      -- one row per quarterly instalment per user
 reminder_log        -- tracks which quarters have already been notified
 uploaded_documents  -- stores Telegram file_ids (no further processing)
 
-The DB file is created next to this module as jaldhrishti.db unless
-the env-var JALDHRISHTI_DB overrides the path.
+The DB path comes from src.config.settings: explicit environment override,
+existing legacy database, then data/output/jaldhrishti.db for new checkouts.
 """
 
+from contextlib import contextmanager
 import json
-import os
 import sqlite3
 from datetime import date
 from pathlib import Path
@@ -31,8 +31,9 @@ def _add_months(d: date, months: int) -> date:
     day = min(d.day, days_in_month[month - 1])
     return date(year, month, day)
 
-_DEFAULT_DB = Path(__file__).parent / "jaldhrishti.db"
-DB_PATH: str = os.environ.get("JALDHRISHTI_DB", str(_DEFAULT_DB))
+from src.config.settings import database_path
+
+DB_PATH: str = database_path()
 
 
 def _connect() -> sqlite3.Connection:
@@ -44,6 +45,17 @@ def _connect() -> sqlite3.Connection:
     conn.execute("PRAGMA journal_mode=WAL")
     conn.execute("PRAGMA foreign_keys=ON")
     return conn
+
+
+@contextmanager
+def _transaction():
+    """Commit/rollback and always close the connection (including on Windows)."""
+    conn = _connect()
+    try:
+        with conn:
+            yield conn
+    finally:
+        conn.close()
 
 
 _DDL = """
@@ -76,7 +88,7 @@ CREATE TABLE IF NOT EXISTS uploaded_documents (
 
 def init_db() -> None:
     """Create all required tables if they do not already exist. Idempotent."""
-    with _connect() as conn:
+    with _transaction() as conn:
         conn.executescript(_DDL)
 
 
@@ -122,7 +134,7 @@ def save_user_loan(chat_id: int, financial_plan: dict, start_date: str) -> None:
                  start_date=excluded.start_date,
                  financial_plan_json=excluded.financial_plan_json,
                  created_at=datetime('now')"""
-    with _connect() as conn:
+    with _transaction() as conn:
         conn.executemany(sql, rows)
 
 
@@ -144,14 +156,14 @@ def get_due_today() -> list:
                    WHERE rl.chat_id = ls.chat_id AND rl.quarter = ls.quarter
                )
              ORDER BY ls.chat_id, ls.quarter"""
-    with _connect() as conn:
+    with _transaction() as conn:
         rows = conn.execute(sql, (today,)).fetchall()
     return [dict(row) for row in rows]
 
 
 def mark_reminded(chat_id: int, quarter: int) -> None:
     """Record that the reminder for `quarter` was sent to `chat_id`. Idempotent."""
-    with _connect() as conn:
+    with _transaction() as conn:
         conn.execute(
             "INSERT OR IGNORE INTO reminder_log (chat_id, quarter) VALUES (?, ?)",
             (chat_id, quarter),
@@ -160,7 +172,7 @@ def mark_reminded(chat_id: int, quarter: int) -> None:
 
 def save_uploaded_document(chat_id: int, file_id: str) -> None:
     """Store a Telegram file_id uploaded by the user. No further processing."""
-    with _connect() as conn:
+    with _transaction() as conn:
         conn.execute(
             "INSERT INTO uploaded_documents (chat_id, file_id) VALUES (?, ?)",
             (chat_id, file_id),

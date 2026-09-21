@@ -1,4 +1,26 @@
-__pycache__/
-*.pyc
+# Secrets and local environment
 .env
+.env.*
+!.env.example
+.venv/
+venv/
+# Python and tool outputs
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+# Private runtime state (including SQLite sidecars and backups)
 *.db
+*.db-*
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.sqlite3-*
+*.log
+*.bak
+# Keep directory placeholders; never publish user input/output
+/data/input/*
+!/data/input/.gitkeep
+/data/output/*
+!/data/output/.gitkeep

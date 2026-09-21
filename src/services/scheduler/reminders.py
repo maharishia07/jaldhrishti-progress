@@ -15,8 +15,8 @@ start_scheduler(bot) -> BackgroundScheduler
 
 Demo (standalone)
 -----------------
-    from scheduler.storage import init_db, save_user_loan
-    from scheduler.reminders import run_daily_check
+    from src.services.scheduler.storage import init_db, save_user_loan
+    from src.services.scheduler.reminders import run_daily_check
     import telegram, datetime
 
     bot = telegram.Bot(token="YOUR_TOKEN")
@@ -39,7 +39,7 @@ import logging
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
 
-from scheduler.storage import get_due_today, mark_reminded, init_db
+from src.services.scheduler.storage import get_due_today, mark_reminded, init_db
 
 logger = logging.getLogger(__name__)
 

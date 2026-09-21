@@ -1,5 +1,5 @@
 import json
-from pathlib import Path
+from src.config.settings import SCHEME_RULES_PATH
 
 
 def calculate_financial_plan(margin_money: float) -> dict:
@@ -17,7 +17,7 @@ def calculate_financial_plan(margin_money: float) -> dict:
     if margin_money <= 0:
         return {"error": "invalid margin money"}
 
-    rules_path = Path(__file__).parent / "scheme_rules.json"
+    rules_path = SCHEME_RULES_PATH
     try:
         with open(rules_path, "r", encoding="utf-8") as f:
             scheme_rules = json.load(f)
