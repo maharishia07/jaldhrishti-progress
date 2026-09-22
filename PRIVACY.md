@@ -6,13 +6,13 @@ This notice describes the code in `jaldhrishti-progress`. It replaces documentat
 
 ## Information handled
 
-The Telegram conversation receives a location, available margin money and proposed business type. Answers are held in process memory while the conversation runs. The application stores the Telegram chat ID, calculated financial-plan JSON, quarterly amounts, due dates and reminder records in SQLite.
+The Whatsapp conversation receives a location, available margin money and proposed business type. Answers are held in process memory while the conversation runs. The application stores the Telegram chat ID, calculated financial-plan JSON, quarterly amounts, due dates and reminder records in SQLite.
 
 For optional document uploads, it stores the Telegram file ID and logs that identifier. It does not download, read or extract the document in this version. Telegram still receives any document sent through the chat. Do not upload identity documents, account details, passwords, PINs or OTPs.
 
 ## External processing
 
-- Telegram transports messages and attachments.
+- Whatsapp transports messages and attachments.
 - OpenStreetMap Nominatim receives typed location searches.
 - OpenStreetMap Overpass receives coordinates and business-tag queries.
 - Google Gemini receives location/business information and calculated financial figures to generate the advisory report.
