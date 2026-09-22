@@ -1,12 +1,12 @@
 # Jaldhrishti Progress
 
-Early development checkpoint of Jaldhrishti, a Telegram business-advisory prototype for rural entrepreneurs (Smart India Hackathon, problem statement 26091).
+Early development checkpoint of Jaldhrishti, a Whatsapp business-advisory prototype for rural entrepreneurs (Smart India Hackathon, problem statement 26091).
 
 This repository is [jaldhrishti-progress](https://github.com/maharishia07/jaldhrishti-progress). It is separate from the more developed `jaldhrishti-bot` project; features and test results from that project do not describe this checkpoint.
 
 ## What this version does
 
-The `/start` conversation asks for a typed location, available margin money and business type. It combines an OpenStreetMap lookup, deterministic financial calculations and a Gemini-generated feasibility summary, then saves a draft repayment schedule in SQLite. Optional document uploads store a Telegram file identifier; this version does not read their contents.
+The `/start` conversation asks for a typed location, available margin money and business type. It combines an OpenStreetMap lookup, deterministic financial calculations and a Gemini-generated feasibility summary, then saves a draft repayment schedule in SQLite. Optional document uploads store a Whatsapp file identifier; this version does not read their contents.
 
 ## Quick start
 
@@ -64,7 +64,7 @@ The package uses `__init__.py` files for Python imports. API, model and utility 
 
 ## Configuration and data
 
-- `BOT_TOKEN`: Telegram bot credential.
+- `BOT_TOKEN`: Whatsapp bot credential.
 - `GEMINI_API_KEY`: credential for report generation.
 - `JALDHRISHTI_DB`: optional SQLite path override. New installations default to `data/output/jaldhrishti.db`; an existing legacy `scheduler/jaldhrishti.db` is preserved and selected if present.
 - Scheme reference rules stay beside the financial engine in `src/services/engine/scheme_rules.json`.
